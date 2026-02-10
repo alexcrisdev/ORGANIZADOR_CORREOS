@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Dominio {
+  id        Int     @id @default(autoincrement())
+  name      String  @unique
+  isActive  Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  areaDominios   AreaDominio[]
+  correos        Correo[]
+  @@map("dominio")
+}
+
+model Area {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  areaDominios AreaDominio[]
+  correos      Correo[]
+
+  @@map("area")
+}
+
+model AreaDominio {
+  areaId    Int
+  dominioId Int
+  createdAt DateTime @default(now())
+  
+  area    Area    @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  dominio Dominio @relation(fields: [dominioId], references: [id], onDelete: Cascade)
+
+  @@id([areaId, dominioId])
+  @@map("area_dominio")
+}
+
+model Correo {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  password  String
+  areaId    Int
+  dominioId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  area    Area    @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  dominio Dominio @relation(fields: [dominioId], references: [id], onDelete: Cascade)
+
+  @@map("correo")
+}
