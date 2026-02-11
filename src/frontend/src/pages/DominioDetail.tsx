@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { AREAS_COMUNES } from "./listados_areas_comunes";
+import { apiEndpoint } from "../config";
 import '../App.css'
 
 type AreaDominio = {
@@ -38,8 +39,8 @@ export function DominioDetail() {
     useEffect(() => {
         //Traer áreas
         Promise.all([
-            fetch('http://localhost:3000/api/areas').then(r => r.json()),
-            fetch(`http://localhost:3000/api/dominios/${dominioId}`).then(r => r.json())
+            fetch(apiEndpoint('/api/areas')).then(r => r.json()),
+            fetch(apiEndpoint(`/api/dominios/${dominioId}`)).then(r => r.json())
         ])
           .then(([areasData, dominioData]) => {
             setAreas(areasData)
@@ -63,7 +64,7 @@ export function DominioDetail() {
             return
         }
 
-        const res = await fetch('http://localhost:3000/api/areas', {
+        const res = await fetch(apiEndpoint('/api/areas'), {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -88,7 +89,7 @@ export function DominioDetail() {
         if(!confirm('¿Eliminar esta área? Se borrarán todos los correos asociados')) return
 
         try {
-            const res = await fetch(`http://localhost:3000/api/areas/${areaId}`, {
+            const res = await fetch(apiEndpoint(`/api/areas/${areaId}`), {
                 method: 'DELETE'
             })
 
@@ -119,7 +120,7 @@ export function DominioDetail() {
         }
 
         try {
-            const res = await fetch(`http://localhost:3000/api/areas/${editingAreaId}`, {
+            const res = await fetch(apiEndpoint(`/api/areas/${editingAreaId}`), {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({name: editAreaName.trim()})

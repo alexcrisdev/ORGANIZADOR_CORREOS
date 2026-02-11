@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AREAS_COMUNES } from "./listados_areas_comunes";
+import { apiEndpoint } from "../config";
 import '../App.css'
 
 type Dominio = {
@@ -26,7 +27,7 @@ export function Home() {
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        fetch('http://localhost:3000/api/dominios')
+        fetch(apiEndpoint('/api/dominios'))
             .then(response => response.json())
             .then(datos => {
                 setDominios(datos)
@@ -47,7 +48,7 @@ export function Home() {
             return
         }
 
-        const res = await fetch('http://localhost:3000/api/dominios', {
+        const res = await fetch(apiEndpoint('/api/dominios'), {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({name, isActive})
@@ -69,7 +70,7 @@ export function Home() {
         if(!confirm('¿Desactivar este dominio?')) return
 
         try {
-            const res = await fetch(`http://localhost:3000/api/dominios/${id}`, {
+            const res = await fetch(apiEndpoint(`/api/dominios/${id}`), {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({isActive: false})
@@ -92,7 +93,7 @@ export function Home() {
         if(!confirm('¿Eliminar permanentemente este dominio? No se podrá recuperar.')) return
 
         try {
-            const res = await fetch(`http://localhost:3000/api/dominios/${id}`, {
+            const res = await fetch(apiEndpoint(`/api/dominios/${id}`), {
                 method: 'DELETE'
             })
 
@@ -124,7 +125,7 @@ export function Home() {
         }
 
         try {
-            const res = await fetch(`http://localhost:3000/api/dominios/${editingId}`, {
+            const res = await fetch(apiEndpoint(`/api/dominios/${editingId}`), {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({name: editName.trim(), isActive: editIsActive})

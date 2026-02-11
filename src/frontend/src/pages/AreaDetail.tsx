@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { apiEndpoint } from '../config'
 import '../App.css'
 
 type Correo = {
@@ -47,9 +48,9 @@ export function AreaDetail() {
   useEffect(() => {
     // Traer correos, área y dominio
     Promise.all([
-      fetch('http://localhost:3000/api/correos').then(r => r.json()),
-      fetch(`http://localhost:3000/api/areas/${areId}`).then(r => r.json()),
-      fetch(`http://localhost:3000/api/dominios/${dominioId}`).then(r => r.json())
+      fetch(apiEndpoint('/api/correos')).then(r => r.json()),
+      fetch(apiEndpoint(`/api/areas/${areId}`)).then(r => r.json()),
+      fetch(apiEndpoint(`/api/dominios/${dominioId}`)).then(r => r.json())
     ])
       .then(([correosData, areaData, dominioData]) => {
         setCorreos(correosData)
@@ -82,7 +83,7 @@ export function AreaDetail() {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/correos', {
+      const response = await fetch(apiEndpoint('/api/correos'), {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -113,7 +114,7 @@ export function AreaDetail() {
     if(!confirm('¿Eliminar este correo?')) return
 
     try {
-      const res = await fetch(`http://localhost:3000/api/correos/${correoId}`, {
+      const res = await fetch(apiEndpoint(`/api/correos/${correoId}`), {
         method: 'DELETE'
       })
 
@@ -153,7 +154,7 @@ export function AreaDetail() {
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/api/correos/${editingCorreoId}`, {
+      const res = await fetch(apiEndpoint(`/api/correos/${editingCorreoId}`), {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)
