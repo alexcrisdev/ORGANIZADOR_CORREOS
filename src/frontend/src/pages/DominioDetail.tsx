@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useToast } from "../hooks/useToast";
 import { AREAS_COMUNES } from "./listados_areas_comunes";
 import { apiEndpoint } from "../config";
 import '../App.css'
@@ -23,6 +24,7 @@ type Dominio = {
 
 export function DominioDetail() {
     const {id} = useParams<{id: string}>()
+    const {showToast} = useToast()
     const dominioId = parseInt(id || '0')
 
     const [open, setOpen] = useState(false)
@@ -60,7 +62,7 @@ export function DominioDetail() {
         const nombreArea = areaSeleccionada === 'nueva' ? areaNueva : areaSeleccionada
 
         if(!nombreArea.trim()) {
-            alert('El nombre no puede estar vacío')
+            showToast('El nombre no puede estar vacío', 'warning')
             return
         }
 
@@ -74,7 +76,7 @@ export function DominioDetail() {
         })
 
         if(!res.ok) {
-            alert('Error al crear área')
+            showToast('Error al crear área', 'error')
             return
         }
 
@@ -94,14 +96,14 @@ export function DominioDetail() {
             })
 
             if(!res.ok) {
-                alert('Error al eliminar área')
+                showToast('Error al eliminar área', 'error')
                 return
             }
 
             setAreas(areas.filter(a => a.id !== areaId))
         } catch(err) {
             console.error('Error:', err)
-            alert('Error al eliminar área')
+            showToast('Error al eliminar área', 'error')
         }
     }
 
@@ -115,7 +117,7 @@ export function DominioDetail() {
         e.preventDefault()
 
         if(!editAreaName.trim()) {
-            alert('El nombre no puede estar vacío')
+            showToast('El nombre no puede estar vacío', 'warning')
             return
         }
 
@@ -127,7 +129,7 @@ export function DominioDetail() {
             })
 
             if(!res.ok) {
-                alert('Error al actualizar área')
+                showToast('Error al actualizar área', 'error')
                 return
             }
 
@@ -137,7 +139,7 @@ export function DominioDetail() {
             setEditingAreaId(null)
         } catch(err) {
             console.error('Error:', err)
-            alert('Error al actualizar área')
+            showToast('Error al actualizar área', 'error')
         }
     }
 

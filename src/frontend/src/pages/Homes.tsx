@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useToast } from "../hooks/useToast";
 import { Link } from "react-router-dom";
 import { AREAS_COMUNES } from "./listados_areas_comunes";
 import { apiEndpoint } from "../config";
@@ -14,6 +15,7 @@ type Dominio = {
 
 export function Home() {
     const [name, setName] = useState('')
+    const {showToast} = useToast()
     const [isActive, setIsActive] = useState(true)
     const [open, setOpen] = useState(false)
     const [openComunes, setOpenComunes] = useState(false)
@@ -44,7 +46,7 @@ export function Home() {
         e.preventDefault()
 
         if(!name.trim()){
-            alert('El nombre no puede estar vacío')
+            showToast('El nombre no puede estar vacío', 'warning')
             return
         }
 
@@ -55,7 +57,7 @@ export function Home() {
         })
 
         if(!res.ok) {
-            alert('Error al crear dominio')
+            showToast('Error al crear dominio', 'error')
             return
         }
 
@@ -77,7 +79,7 @@ export function Home() {
             })
 
             if(!res.ok) {
-                alert('Error al inactivar dominio')
+                showToast('Error al inactivar dominio', 'error')
                 return
             }
 
@@ -85,7 +87,7 @@ export function Home() {
             setDominios(dominios.map(d => d.id === id ? {...d, isActive: false} : d))
         } catch(err) {
             console.error('Error:', err)
-            alert('Error al inactivar dominio')
+            showToast('Error al inactivar dominio', 'error')
         }
     }
 
@@ -98,14 +100,14 @@ export function Home() {
             })
 
             if(!res.ok) {
-                alert('Error al eliminar dominio')
+                showToast('Error al eliminar dominio', 'error')
                 return
             }
 
             setDominios(dominios.filter(d => d.id !== id))
         } catch(err) {
             console.error('Error:', err)
-            alert('Error al eliminar dominio')
+            showToast('Error al eliminar dominio', 'error')
         }
     }
 
@@ -120,7 +122,7 @@ export function Home() {
         e.preventDefault()
 
         if(!editName.trim()) {
-            alert('El nombre no puede estar vacío')
+            showToast('El nombre no puede estar vacío', 'warning')
             return
         }
 
@@ -132,7 +134,7 @@ export function Home() {
             })
 
             if(!res.ok) {
-                alert('Error al actualizar dominio')
+                showToast('Error al actualizar dominio', 'error')
                 return
             }
 
@@ -142,7 +144,7 @@ export function Home() {
             setEditingId(null)
         } catch(err) {
             console.error('Error:', err)
-            alert('Error al actualizar dominio')
+            showToast('Error al actualizar dominio', 'error')
         }
     }
 

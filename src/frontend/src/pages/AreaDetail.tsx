@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { useToast } from '../hooks/useToast'
 import { apiEndpoint } from '../config'
 import '../App.css'
 
@@ -23,6 +24,7 @@ type Dominio = {
 
 export function AreaDetail() {
   const { id, areaId } = useParams<{ id: string; areaId: string }>()
+  const {showToast} = useToast()
   const dominioId = parseInt(id || '0')
   const areId = parseInt(areaId || '0')
 
@@ -73,12 +75,12 @@ export function AreaDetail() {
     e.preventDefault()
 
     if(!localPart.trim()) {
-      alert('El nombre del correo es obligatorio')
+      showToast('El nombre del correo es obligatorio', 'warning')
       return
     }
 
     if(!password.trim()) {
-      alert('La contraseña es obligatoria')
+      showToast('La contraseña es obligatoria', 'warning')
       return
     }
 
@@ -106,7 +108,7 @@ export function AreaDetail() {
       setOpen(false)
     } catch(err) {
       console.error('Error:', err)
-      alert(err instanceof Error ? err.message : 'Error al crear el correo')
+      showToast(err instanceof Error ? err.message : 'Error al crear el correo', 'error')
     }
   }
 
@@ -119,14 +121,14 @@ export function AreaDetail() {
       })
 
       if(!res.ok) {
-        alert('Error al eliminar correo')
+        showToast('Error al eliminar correo', 'error')
         return
       }
 
       setCorreos(correos.filter(c => c.id !== correoId))
     } catch(err) {
       console.error('Error:', err)
-      alert('Error al eliminar correo')
+      showToast('Error al eliminar correo', 'error')
     }
   }
 
@@ -141,7 +143,7 @@ export function AreaDetail() {
     e.preventDefault()
 
     if(!editLocalPart.trim()) {
-      alert('El nombre del correo es obligatorio')
+      showToast('El nombre del correo es obligatorio', 'warning')
       return
     }
 
@@ -161,7 +163,7 @@ export function AreaDetail() {
       })
 
       if(!res.ok) {
-        alert('Error al actualizar correo')
+        showToast('Error al actualizar correo', 'error')
         return
       }
 
@@ -171,7 +173,7 @@ export function AreaDetail() {
       setEditingCorreoId(null)
     } catch(err) {
       console.error('Error:', err)
-      alert('Error al actualizar correo')
+      showToast('Error al actualizar correo', 'error')
     }
   }
 
@@ -187,7 +189,7 @@ export function AreaDetail() {
       }, 2000)
     } catch(err) {
       console.error('Error al copiar:', err)
-      alert('Error al copiar')
+      showToast('Error al copiar', 'error')
     }
   }
 
