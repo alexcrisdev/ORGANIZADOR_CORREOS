@@ -6,7 +6,24 @@ import routerCorreo from "./modules/correo/correo.routes";
 
 const app = express(); //Crear el server
 
-app.use(cors());
+// CORS: permitir frontend local y el de produccion
+const allowedOrigins = [
+    'http://localhost:5173',
+    process.env.FRONTEND_URL || ''
+].filter(Boolean);
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true
+}));
 app.use(express.json()); //Todo lo que entre, hablarán en idioma JSON
 
 app.get("/health", (req,res)=>{
